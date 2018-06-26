@@ -52,7 +52,8 @@ def main():
         ('serverBIOSVendor', 'sudo dmidecode -s bios-vendor'),
         ('serverBIOSVersion', 'sudo dmidecode -s bios-version'),
         ('serverBIOSReleaseDate', 'sudo dmidecode -s bios-release-date'),
-        ('serverSerialNumber', 'sudo dmidecode -s system-serial-number')
+        ('serverSerialNumber', 'sudo dmidecode -s system-serial-number'),
+        ('updateTime', 'date')
     ]
 
     if distro == 'Ubuntu':
@@ -70,7 +71,6 @@ def main():
 
     for command in commands:
         updateCol(wks, command[0], rowIdx, command[1])
-
 
 
 if __name__ == "__main__":
