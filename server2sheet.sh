@@ -1,7 +1,7 @@
 #!/bin/bash
 
-sudo apt-get install git
-sudo apt-get install python3-pip
+sudo apt-get install -y git
+sudo apt-get install -y python3-pip
 
 pip3 install --upgrade oauth2client
 pip3 install PyOpenSSL
