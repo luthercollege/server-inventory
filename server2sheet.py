@@ -17,8 +17,8 @@ def getRowIdxByName(rows, name):
     return len(rows) + 1
 
 def getCell(colName, rowIdx, command, firstRow):
-    output = subprocess.run(command, shell=True, stdout=subprocess.PIPE, universal_newlines=True)
-    val = output.stdout.strip()
+    output = subprocess.check_output(command, shell=True, universal_newlines=True)
+    val = output.strip()
     
     colIdx = 1
 
@@ -32,7 +32,7 @@ def getCell(colName, rowIdx, command, firstRow):
 
 
 def main():
-    serverName = subprocess.run('hostname -s', shell=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
+    serverName = subprocess.check_output('hostname -s', shell=True, universal_newlines=True).strip()
     
     commands = [
         ('name', 'hostname -s'),
@@ -66,8 +66,11 @@ def main():
 
     cells = []
     for command in commands:
-        c = getCell(command[0], rowIdx, command[1], rows[0])
-        cells.append(c)
+        try:
+            c = getCell(command[0], rowIdx, command[1], rows[0])
+            cells.append(c)
+        except:
+            print(command[0] + " failed")
     
     wks.update_cells(cells)
 
