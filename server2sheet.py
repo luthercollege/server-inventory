@@ -10,7 +10,7 @@ def getRowIdxByName(wks, name):
 
     colIdx = 0
     for i, col in enumerate(rows[0]):
-        if col == 'serverName': colIdx = i + 1
+        if col == 'name': colIdx = i + 1
     
     for idx, row in enumerate(rows):
         if row[colIdx - 1] == name:
