@@ -5,9 +5,7 @@ import subprocess
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-def getRowIdxByName(wks, name):
-    rows = wks.get_all_values()
-
+def getRowIdxByName(rows, name):
     colIdx = 0
     for i, col in enumerate(rows[0]):
         if col == 'name': colIdx = i + 1
@@ -63,14 +61,15 @@ def main():
     gc = gspread.authorize(credentials)
     wks = gc.open_by_key("1XnS1Oz7eRfb38H30Ow1M3NHtXvjSmjpTv0ELbv9MXxA").sheet1
             
-    rowIdx = getRowIdxByName(wks, serverName)
+    rows = wks.get_all_values()
+        
+    rowIdx = getRowIdxByName(rows, serverName)
 
     print('Updating on Google Sheets...')
 
-    firstRow = wks.row_values(1)
     cells = []
     for command in commands:
-        c = getCell(command[0], rowIdx, command[1], firstRow)
+        c = getCell(command[0], rowIdx, command[1], rows[0])
         cells.append(c)
     
     wks.update_cells(cells)
