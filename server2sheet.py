@@ -18,11 +18,9 @@ def getRowIdxByName(wks, name):
     
     return len(rows) + 1
 
-def updateCol(wks, colName, rowIdx, command):
+def getCell(colName, rowIdx, command, firstRow):
     output = subprocess.run(command, shell=True, stdout=subprocess.PIPE, universal_newlines=True)
     val = output.stdout.strip()
-
-    firstRow = wks.row_values(1)
     
     colIdx = 0
 
@@ -31,7 +29,7 @@ def updateCol(wks, colName, rowIdx, command):
 
     print(colName, val)
     
-    wks.update_cell(rowIdx, colIdx, val)
+    return gspread.models.Cell(rowIdx, colIdx, val)
     
 
 
@@ -69,8 +67,13 @@ def main():
 
     print('Updating on Google Sheets...')
 
+    firstRow = wks.row_values(1)
+    cells = []
     for command in commands:
-        updateCol(wks, command[0], rowIdx, command[1])
+        c = getCell(command[0], rowIdx, command[1], firstRow)
+        cells.append(c)
+    
+    wks.update_cells(cells)
 
 
 if __name__ == "__main__":
