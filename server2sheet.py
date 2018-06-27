@@ -20,7 +20,7 @@ def getCell(colName, rowIdx, command, firstRow):
     output = subprocess.run(command, shell=True, stdout=subprocess.PIPE, universal_newlines=True)
     val = output.stdout.strip()
     
-    colIdx = 0
+    colIdx = 1
 
     for i, col in enumerate(firstRow):
         if col == colName: colIdx = i + 1
@@ -33,7 +33,6 @@ def getCell(colName, rowIdx, command, firstRow):
 
 def main():
     serverName = subprocess.run('hostname -s', shell=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
-    distro = subprocess.run('lsb_release -is', shell=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
     
     commands = [
         ('name', 'hostname -s'),
@@ -49,12 +48,10 @@ def main():
         ('BIOSVer', 'sudo dmidecode -s bios-version'),
         ('BIOSReleaseDate', 'sudo dmidecode -s bios-release-date'),
         ('serialNum', 'sudo dmidecode -s system-serial-number'),
+        ('pendingRegularUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 1"),
+        ('pendingSecurityUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 2"),
         ('updateTime', 'date')
     ]
-
-    if distro == 'Ubuntu':
-        commands.append(('pendingRegularUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 1"))
-        commands.append(('pendingSecurityUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 2"))
     
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(os.path.abspath(__file__)) + '/gspread-638cf9da7c8d.json', scope)
