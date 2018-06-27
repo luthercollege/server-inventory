@@ -40,25 +40,25 @@ def main():
     distro = subprocess.run('lsb_release -is', shell=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
     
     commands = [
-        ('serverName', 'hostname -s'),
-        ('serverUptime', 'uptime'),
-        ('serverKernelVersion', 'uname -r'),
-        ('serverArchitecture', 'uname -m'),
-        ('serverDistribution', 'lsb_release -is'),
-        ('serverDistributionVersion', 'lsb_release -rs'),
-        ('serverOpenSSLVersion', 'openssl version'),
-        ('serverIP', 'hostname -i'),
-        ('serverManufacturer', 'sudo dmidecode -s system-manufacturer'),
-        ('serverBIOSVendor', 'sudo dmidecode -s bios-vendor'),
-        ('serverBIOSVersion', 'sudo dmidecode -s bios-version'),
-        ('serverBIOSReleaseDate', 'sudo dmidecode -s bios-release-date'),
-        ('serverSerialNumber', 'sudo dmidecode -s system-serial-number'),
+        ('name', 'hostname -s'),
+        ('uptime', 'uptime | cut -d, -f1'),
+        ('kernelVer', 'uname -r'),
+        ('arch', 'uname -m'),
+        ('distro', 'lsb_release -is'),
+        ('distroVer', 'lsb_release -rs'),
+        ('openSSLVer', 'openssl version'),
+        ('IP', 'hostname -i'),
+        ('manufacturer', 'sudo dmidecode -s system-manufacturer'),
+        ('BIOSVendor', 'sudo dmidecode -s bios-vendor'),
+        ('BIOSVer', 'sudo dmidecode -s bios-version'),
+        ('BIOSReleaseDate', 'sudo dmidecode -s bios-release-date'),
+        ('serialNum', 'sudo dmidecode -s system-serial-number'),
         ('updateTime', 'date')
     ]
 
     if distro == 'Ubuntu':
-        commands.append(('serverPendingRegularUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 1"))
-        commands.append(('serverPendingSecurityUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 2"))
+        commands.append(('pendingRegularUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 1"))
+        commands.append(('pendingSecurityUpdates', "/usr/lib/update-notifier/apt-check 2>&1 | cut -d ';' -f 2"))
     
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(os.path.abspath(__file__)) + '/gspread-638cf9da7c8d.json', scope)
